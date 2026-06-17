@@ -1,5 +1,5 @@
 // ============================================================
-// CityTransit — App Logic
+// Aruvi — App Logic
 // ============================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -145,6 +145,22 @@ function filterSchedule() {
     row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none";
   });
 }
+
+// --- Nav bar active indicator ---
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", function(e) {
+      document.querySelectorAll(".nav-link").forEach(l => {
+        l.classList.remove("text-primary", "border-b-2", "border-primary");
+        l.classList.add("text-on-surface-variant");
+      });
+      this.classList.remove("text-on-surface-variant");
+      this.classList.add("text-primary", "border-b-2", "border-primary");
+      document.getElementById("mobileNav")?.classList.add("hidden");
+    });
+  });
+});
 
 // --- Mobile nav ---
 
