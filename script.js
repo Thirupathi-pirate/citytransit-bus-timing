@@ -71,7 +71,8 @@ function renderSchedules() {
 
   container.innerHTML = SECTIONS.map((sec, si) => {
     const svcs = expandSection(sec);
-    const hasVia = svcs.some(sv => sv.via);
+    const viaCount = svcs.filter(sv => sv.via).length;
+    const hasVia = viaCount / svcs.length >= 0.3;
     const cols = hasVia ? "grid-cols-[1fr_auto_1fr]" : "grid-cols-[1fr_auto]";
 
     const rows = svcs.map((sv, i) => {
@@ -79,7 +80,7 @@ function renderSchedules() {
       return `<div class="grid ${cols} gap-3 px-5 py-2.5 items-center border-b border-outline-variant/20 hover:bg-surface-container-high transition-colors text-sm schedule-row">
         <span class="font-medium text-on-surface truncate">${sv.op}</span>
         <span class="font-mono font-bold text-on-surface text-right">${timeDisplay}</span>
-        ${hasVia ? `<span class="text-xs text-on-surface-variant truncate text-right">${sv.via || "—"}</span>` : ''}
+        ${hasVia ? `<span class="text-xs text-on-surface-variant truncate text-right">${sv.via || ""}</span>` : ''}
       </div>`;
     }).join("");
 
