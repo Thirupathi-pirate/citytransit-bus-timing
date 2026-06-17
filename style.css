@@ -23,3 +23,8 @@ body { background: #15121b; color: #e7e0ed; font-family: 'Inter', sans-serif; ov
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #37333d; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #494454; }
+
+.swap-btn { cursor: pointer; transition: all 0.3s ease; }
+.swap-btn:hover { background: #37333d; transform: scale(1.1); }
+.swap-icon { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.swap-btn.swapped .swap-icon { transform: rotate(180deg); }

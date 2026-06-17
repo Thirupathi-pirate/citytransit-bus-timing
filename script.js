@@ -167,3 +167,17 @@ document.addEventListener("DOMContentLoaded", () => {
 function toggleMobileNav() {
   document.getElementById("mobileNav").classList.toggle("hidden");
 }
+
+// --- Swap locations ---
+
+function swapLocations() {
+  const from = document.getElementById("fromInput");
+  const to = document.getElementById("toInput");
+  const btn = document.querySelector(".swap-btn");
+  if (!from || !to) return;
+  const tmp = from.value;
+  from.value = to.value;
+  to.value = tmp;
+  btn.classList.add("swapped");
+  setTimeout(() => btn.classList.remove("swapped"), 400);
+}
