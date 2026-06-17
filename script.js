@@ -60,14 +60,14 @@ function renderSchedules(schedules) {
   tbody.innerHTML = schedules.map(s => {
     const isCancelled = s.status === "cancelled";
     const isDelayed = s.status === "delayed";
-    return `<tr class="schedule-row bg-surface-container hover:bg-surface-container-high transition-colors${isCancelled ? ' opacity-60' : ''}">
-      <td class="px-5 py-4">${s.stop}</td>
-      <td class="px-5 py-4"><span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg ${badgeClass(s.route)} text-xs font-semibold">${s.route}</span></td>
+    return `<tr class="schedule-row bg-surface-container hover:bg-surface-container-high transition-colors${isCancelled ? ' opacity-60' : ''}" data-route="${s.routeId}">
+      <td class="px-5 py-4 text-sm">${s.route}</td>
+      <td class="px-5 py-4"><span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-container-high text-on-surface text-xs font-semibold border border-outline-variant">${s.operator}</span></td>
       <td class="px-5 py-4 font-mono text-sm font-bold${isCancelled ? ' text-outline line-through' : ''}">${s.time}</td>
-      <td class="px-5 py-4"><span class="flex items-center gap-2 text-xs"><span class="w-2 h-2 rounded-full ${statusDotClass(s.status)}"></span>${isDelayed ? '<span class="text-error">+4 min delayed</span>' : isCancelled ? '<span class="text-error">Cancelled</span>' : '<span class="text-tertiary">On-time</span>'}</span></td>
+      <td class="px-5 py-4"><span class="flex items-center gap-2 text-xs"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="text-tertiary">On-time</span></span></td>
     </tr>`;
   }).join("");
-  document.getElementById("scheduleCount").textContent = `Showing 1-${schedules.length} of ${schedules.length} stops`;
+  document.getElementById("scheduleCount").textContent = `Showing 1-${schedules.length} of ${schedules.length} services`;
 }
 
 function renderAlerts(alerts) {
@@ -98,11 +98,6 @@ function statusTextClass(status) {
   return m[status] || "text-on-surface-variant";
 }
 
-function badgeClass(route) {
-  const m = { Express: "bg-primary/15 text-primary", Local: "bg-outline/15 text-outline border border-outline/30", Rapid: "bg-secondary/15 text-secondary" };
-  return m[route] || "bg-outline/15 text-outline";
-}
-
 // --- Dropdown ---
 
 function toggleDropdown(id) {
@@ -120,6 +115,7 @@ function selectDropdown(id, el, label) {
   el.classList.add("selected");
   document.getElementById(id + "Menu").classList.remove("open");
   if (id === "route" || id === "status") filterArrivals();
+  if (id === "scheduleRoute") filterScheduleRoute();
 }
 
 document.addEventListener("click", function(e) {
@@ -143,6 +139,13 @@ function filterSchedule() {
   const query = document.getElementById("scheduleSearch").value.toLowerCase();
   document.querySelectorAll(".schedule-row").forEach(row => {
     row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none";
+  });
+}
+
+function filterScheduleRoute() {
+  const val = document.querySelector("#scheduleRouteMenu .dropdown-item.selected")?.dataset?.value || "all";
+  document.querySelectorAll(".schedule-row").forEach(row => {
+    row.style.display = val === "all" || row.dataset.route === val ? "" : "none";
   });
 }
 
