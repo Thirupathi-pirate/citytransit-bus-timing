@@ -31,7 +31,7 @@ function renderArrivals(routes) {
   grid.innerHTML = routes.map((r, i) => {
     const isDue = r.arrival === "Due Now";
     const timeClass = isDue ? "bus-pulse" : "";
-    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.section}" data-status="${r.status}">
+    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.section}" data-status="${r.status}" data-from="${r.from}" data-to="${r.to}">
       <div class="h-1.5 bg-${r.color}"></div>
       <div class="p-5">
         <div class="flex items-center justify-between mb-2">
@@ -222,6 +222,20 @@ document.addEventListener("scroll", () => {
     document.querySelector(".glass-nav").classList.toggle("scrolled", window.scrollY > 40);
   });
 }, { passive: true });
+
+// --- Plan Route ---
+
+function planRoute() {
+  const from = document.getElementById("fromStopLabel")?.textContent;
+  const to = document.getElementById("toStopLabel")?.textContent;
+  if (!from || !to) return;
+
+  document.querySelectorAll(".arrival-card").forEach(card => {
+    card.style.display = (from === to || (card.dataset.from === from && card.dataset.to === to)) ? "" : "none";
+  });
+
+  document.getElementById("arrivals")?.scrollIntoView({ behavior: "smooth" });
+}
 
 // --- Swap locations ---
 
