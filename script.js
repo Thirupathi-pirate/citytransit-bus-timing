@@ -71,35 +71,32 @@ function renderSchedules() {
 
   container.innerHTML = SECTIONS.map((sec, si) => {
     const svcs = expandSection(sec);
+    const hasVia = svcs.some(sv => sv.via);
+    const cols = hasVia ? "grid-cols-[1fr_auto_1fr]" : "grid-cols-[1fr_auto]";
+
     const rows = svcs.map((sv, i) => {
       const timeDisplay = formatTime(sv.t);
-      return `<tr class="border-b border-outline-variant/30 hover:bg-surface-container-high transition-colors">
-        <td class="px-5 py-3"><span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-container-high text-on-surface text-xs font-semibold border border-outline-variant">${sv.op}</span></td>
-        <td class="px-5 py-3 font-mono text-sm font-bold">${timeDisplay}</td>
-        <td class="px-5 py-3 text-xs text-on-surface-variant">${sv.via}</td>
-      </tr>`;
+      return `<div class="grid ${cols} gap-3 px-5 py-2.5 items-center border-b border-outline-variant/20 hover:bg-surface-container-high transition-colors text-sm schedule-row">
+        <span class="font-medium text-on-surface truncate">${sv.op}</span>
+        <span class="font-mono font-bold text-on-surface text-right">${timeDisplay}</span>
+        ${hasVia ? `<span class="text-xs text-on-surface-variant truncate text-right">${sv.via || "—"}</span>` : ''}
+      </div>`;
     }).join("");
 
     return `<div class="bg-surface-container rounded-2xl border border-outline-variant overflow-hidden schedule-section" data-route="${sec.id}" style="animation-delay:${0.08 * si}s">
-      <div class="px-5 py-4 bg-surface-container-high border-b border-outline-variant flex items-center justify-between">
+      <div class="px-5 py-3 bg-surface-container-high border-b border-outline-variant flex items-center justify-between">
         <h3 class="font-semibold text-on-surface text-sm flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-${sec.color}"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-${sec.color}"></span>
           ${sec.name}
         </h3>
         <span class="text-xs text-on-surface-variant">${svcs.length} services</span>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left min-w-[500px]">
-          <thead>
-            <tr class="bg-surface-container border-b border-outline-variant/50">
-              <th class="px-5 py-3 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Operator</th>
-              <th class="px-5 py-3 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Departure</th>
-              <th class="px-5 py-3 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Via</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-outline-variant/20">${rows}</tbody>
-        </table>
+      <div class="grid ${cols} gap-3 px-5 py-2.5 items-center border-b border-outline-variant/30 bg-surface-container/80 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+        <span>Operator</span>
+        <span class="text-right">Departure</span>
+        ${hasVia ? '<span class="text-right">Via</span>' : ''}
       </div>
+      ${rows}
     </div>`;
   }).join("");
 
@@ -220,7 +217,7 @@ function filterSchedule() {
   const query = document.getElementById("scheduleSearch").value.toLowerCase();
   document.querySelectorAll(".schedule-section").forEach(section => {
     let visible = 0;
-    section.querySelectorAll("tbody tr").forEach(row => {
+    section.querySelectorAll(".schedule-row").forEach(row => {
       const match = row.textContent.toLowerCase().includes(query);
       row.style.display = match ? "" : "none";
       if (match) visible++;
