@@ -3,6 +3,7 @@
 // ============================================================
 
 let timeWindow = 180;
+let routeFilter = { from: null, to: null };
 
 document.addEventListener("DOMContentLoaded", () => {
   renderHeader(BUS_DATA.station, BUS_DATA.platform);
@@ -20,9 +21,13 @@ function renderHeader(station, platform) {
 }
 
 function applyFilters() {
-  const all = BUS_DATA.routes;
-  const filtered = all.filter(r => r.arrivalMinutes <= timeWindow);
-  renderArrivals(filtered);
+  let all = BUS_DATA.routes;
+  all = all.filter(r => r.arrivalMinutes <= timeWindow);
+  if (routeFilter.from && routeFilter.to && routeFilter.from !== routeFilter.to) {
+    all = all.filter(r => r.from === routeFilter.from && r.to === routeFilter.to);
+  }
+  renderArrivals(all);
+  filterArrivals();
 }
 
 function renderArrivals(routes) {
@@ -230,10 +235,20 @@ function planRoute() {
   const to = document.getElementById("toStopLabel")?.textContent;
   if (!from || !to) return;
 
-  document.querySelectorAll(".arrival-card").forEach(card => {
-    card.style.display = (from === to || (card.dataset.from === from && card.dataset.to === to)) ? "" : "none";
-  });
+  routeFilter.from = from;
+  routeFilter.to = to;
 
+  document.querySelector("#routeMenu .dropdown-item.selected")?.classList.remove("selected");
+  document.querySelector("#routeMenu .dropdown-item[data-value='all']")?.classList.add("selected");
+  const routeBtn = document.querySelector("#routeDropdown button");
+  if (routeBtn) routeBtn.innerHTML = '<svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="3" x2="7" y2="10"/><line x1="12" y1="3" x2="12" y2="10"/><line x1="17" y1="3" x2="17" y2="10"/><circle cx="7" cy="20" r="1.5" fill="#d0bcff" stroke="none"/><circle cx="17" cy="20" r="1.5" fill="#d0bcff" stroke="none"/></svg> All Routes<svg class="w-4 h-4 text-outline ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+  document.querySelector("#statusMenu .dropdown-item.selected")?.classList.remove("selected");
+  document.querySelector("#statusMenu .dropdown-item[data-value='all']")?.classList.add("selected");
+  const statusBtn = document.querySelector("#statusDropdown button");
+  if (statusBtn) statusBtn.innerHTML = '<svg class="w-4 h-4 text-tertiary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> All Status<svg class="w-4 h-4 text-outline ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+  applyFilters();
   document.getElementById("arrivals")?.scrollIntoView({ behavior: "smooth" });
 }
 
