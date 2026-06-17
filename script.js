@@ -167,13 +167,3 @@ document.addEventListener("DOMContentLoaded", () => {
 function toggleMobileNav() {
   document.getElementById("mobileNav").classList.toggle("hidden");
 }
-
-// --- Theme ---
-
-let isDark = true;
-function toggleTheme() {
-  isDark = !isDark;
-  document.documentElement.classList.toggle("dark", isDark);
-  document.body.style.background = isDark ? "#15121b" : "#f6faff";
-  document.body.style.color = isDark ? "#e7e0ed" : "#141d23";
-}
