@@ -44,7 +44,7 @@ function renderArrivals(routes) {
   grid.innerHTML = routes.map((r, i) => {
     const isDue = r.arrival === "Due Now";
     const timeClass = isDue ? "bus-pulse" : "";
-    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.section}" data-status="${r.status}" data-from="${r.from}" data-to="${r.to}">
+    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.section}" data-from="${r.from}" data-to="${r.to}">
       <div class="h-1.5 bg-${r.color}"></div>
       <div class="p-5">
         <div class="flex items-center justify-between mb-2">
@@ -74,7 +74,6 @@ function renderSchedules(schedules) {
       <td class="px-5 py-4 text-sm">${s.route}</td>
       <td class="px-5 py-4"><span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-container-high text-on-surface text-xs font-semibold border border-outline-variant">${s.operator}</span></td>
       <td class="px-5 py-4 font-mono text-sm font-bold${isCancelled ? ' text-outline line-through' : ''}">${s.time}</td>
-      <td class="px-5 py-4"><span class="flex items-center gap-2 text-xs"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="text-tertiary">On-time</span></span></td>
     </tr>`;
   }).join("");
   document.getElementById("scheduleCount").textContent = "Showing 1-" + schedules.length + " of " + schedules.length + " services";
@@ -137,7 +136,7 @@ function selectDropdown(id, el, label) {
   document.querySelectorAll(`#${id}Menu .dropdown-item`).forEach(i => i.classList.remove("selected"));
   el.classList.add("selected");
   document.getElementById(id + "Menu").classList.remove("open");
-  if (id === "route" || id === "status") filterArrivals();
+  if (id === "route") filterArrivals();
   if (id === "scheduleRoute") filterScheduleRoute();
 }
 
@@ -183,10 +182,8 @@ document.addEventListener("click", function(e) {
 
 function filterArrivals() {
   const routeVal = document.querySelector("#routeMenu .dropdown-item.selected")?.dataset?.value || "all";
-  const statusVal = document.querySelector("#statusMenu .dropdown-item.selected")?.dataset?.value || "all";
   document.querySelectorAll(".arrival-card").forEach(card => {
-    const r = card.dataset.route, s = card.dataset.status;
-    card.style.display = (routeVal === "all" || r === routeVal) && (statusVal === "all" || s === statusVal) ? "" : "none";
+    card.style.display = (routeVal === "all" || card.dataset.route === routeVal) ? "" : "none";
   });
 }
 
@@ -251,11 +248,6 @@ function planRoute() {
   document.querySelector("#routeMenu .dropdown-item[data-value='all']")?.classList.add("selected");
   const routeBtn = document.querySelector("#routeDropdown button");
   if (routeBtn) routeBtn.innerHTML = '<svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="3" x2="7" y2="10"/><line x1="12" y1="3" x2="12" y2="10"/><line x1="17" y1="3" x2="17" y2="10"/><circle cx="7" cy="20" r="1.5" fill="#d0bcff" stroke="none"/><circle cx="17" cy="20" r="1.5" fill="#d0bcff" stroke="none"/></svg> All Routes<svg class="w-4 h-4 text-outline ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
-
-  document.querySelector("#statusMenu .dropdown-item.selected")?.classList.remove("selected");
-  document.querySelector("#statusMenu .dropdown-item[data-value='all']")?.classList.add("selected");
-  const statusBtn = document.querySelector("#statusDropdown button");
-  if (statusBtn) statusBtn.innerHTML = '<svg class="w-4 h-4 text-tertiary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> All Status<svg class="w-4 h-4 text-outline ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 
   applyFilters();
   document.getElementById("arrivals")?.scrollIntoView({ behavior: "smooth" });
