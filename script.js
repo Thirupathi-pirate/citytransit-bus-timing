@@ -76,8 +76,8 @@ function renderSchedules() {
     const rows = svcs.map((sv, i) => {
       const timeDisplay = formatTime(sv.t);
       return `<div class="flex items-center gap-3 px-5 py-2.5 border-b border-outline-variant/20 hover:bg-surface-container-high transition-colors text-sm schedule-row">
-        <span class="font-mono font-bold text-on-surface shrink-0 w-20">${timeDisplay}</span>
         <span class="font-medium text-on-surface truncate flex-1">${sv.op}</span>
+        <span class="font-mono font-bold text-on-surface shrink-0 w-20 text-center">${timeDisplay}</span>
         ${hasVia ? `<span class="text-xs text-on-surface-variant truncate text-right w-32">${sv.via || ""}</span>` : ''}
       </div>`;
     }).join("");
@@ -91,8 +91,8 @@ function renderSchedules() {
         <span class="text-xs text-on-surface-variant">${svcs.length} services</span>
       </div>
       <div class="flex items-center gap-3 px-5 py-2.5 border-b border-outline-variant/30 bg-surface-container/80 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-        <span class="w-20 shrink-0">Departure</span>
         <span class="flex-1">Operator</span>
+        <span class="w-20 shrink-0 text-center">Departure</span>
         ${hasVia ? '<span class="w-32 shrink-0 text-right">Via</span>' : ''}
       </div>
       ${rows}
