@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
         l.classList.add("text-on-surface-variant");
       });
       this.classList.remove("text-on-surface-variant");
-      this.classList.add("text-primary", "border-b-2", "border-primary");
+      this.classList.add("text-primary");
       document.getElementById("mobileNav")?.classList.add("hidden");
     });
   });
@@ -167,6 +167,16 @@ document.addEventListener("DOMContentLoaded", () => {
 function toggleMobileNav() {
   document.getElementById("mobileNav").classList.toggle("hidden");
 }
+
+// --- Smooth navbar on scroll ---
+
+let navTick;
+document.addEventListener("scroll", () => {
+  cancelAnimationFrame(navTick);
+  navTick = requestAnimationFrame(() => {
+    document.querySelector(".glass-nav").classList.toggle("scrolled", window.scrollY > 40);
+  });
+}, { passive: true });
 
 // --- Swap locations ---
 

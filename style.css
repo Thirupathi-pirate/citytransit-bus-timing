@@ -2,7 +2,8 @@
 body { background: #15121b; color: #e7e0ed; font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
 
 .glass-panel { background: rgba(24, 24, 27, 0.65); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); }
-.glass-nav { background: rgba(21, 18, 27, 0.85); backdrop-filter: blur(32px); border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.glass-nav { background: rgba(21, 18, 27, 0.7); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-bottom: 1px solid rgba(255, 255, 255, 0.06); transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.4s ease, box-shadow 0.4s ease; }
+.glass-nav.scrolled { background: rgba(21, 18, 27, 0.92); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
 .glow-primary { box-shadow: 0 0 24px rgba(208, 188, 255, 0.15); }
 .gradient-text { background: linear-gradient(135deg, #d0bcff 0%, #adc6ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .btn-primary { background: linear-gradient(135deg, #6d3bd7 0%, #0566d9 100%); transition: all 0.3s ease; }
@@ -55,8 +56,9 @@ body { background: #15121b; color: #e7e0ed; font-family: 'Inter', sans-serif; ov
 .hover-bright:hover { filter: brightness(1.2); }
 
 .nav-link { position: relative; transition: color 0.3s ease; }
-.nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: #d0bcff; transition: all 0.3s ease; transform: translateX(-50%); }
-.nav-link:hover::after { width: 80%; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: #d0bcff; transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), left 0.35s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-50%); border-radius: 1px; }
+.nav-link:hover::after { width: 100%; }
+.nav-link.text-primary::after { width: 100%; }
 
 .btn-primary { position: relative; overflow: hidden; }
 .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.6s ease; }
