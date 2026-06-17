@@ -71,15 +71,14 @@ function renderSchedules() {
 
   container.innerHTML = SECTIONS.map((sec, si) => {
     const svcs = expandSection(sec);
-    const viaCount = svcs.filter(sv => sv.via).length;
-    const hasVia = viaCount / svcs.length >= 0.3;
-    const cols = hasVia ? "grid-cols-[1fr_auto_1fr]" : "grid-cols-[1fr_auto]";
+    const hasVia = svcs.some(sv => sv.via);
+    const cols = hasVia ? "grid-cols-[auto_1fr_auto]" : "grid-cols-[auto_1fr]";
 
     const rows = svcs.map((sv, i) => {
       const timeDisplay = formatTime(sv.t);
       return `<div class="grid ${cols} gap-3 px-5 py-2.5 items-center border-b border-outline-variant/20 hover:bg-surface-container-high transition-colors text-sm schedule-row">
+        <span class="font-mono font-bold text-on-surface">${timeDisplay}</span>
         <span class="font-medium text-on-surface truncate">${sv.op}</span>
-        <span class="font-mono font-bold text-on-surface text-right">${timeDisplay}</span>
         ${hasVia ? `<span class="text-xs text-on-surface-variant truncate text-right">${sv.via || ""}</span>` : ''}
       </div>`;
     }).join("");
@@ -93,8 +92,8 @@ function renderSchedules() {
         <span class="text-xs text-on-surface-variant">${svcs.length} services</span>
       </div>
       <div class="grid ${cols} gap-3 px-5 py-2.5 items-center border-b border-outline-variant/30 bg-surface-container/80 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+        <span>Departure</span>
         <span>Operator</span>
-        <span class="text-right">Departure</span>
         ${hasVia ? '<span class="text-right">Via</span>' : ''}
       </div>
       ${rows}
