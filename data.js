@@ -1,0 +1,97 @@
+// ============================================================
+// BUS DATA — Edit this file to feed your bus routes & schedules
+// ============================================================
+
+const BUS_DATA = {
+  routes: [
+    {
+      id: "14x",
+      number: "14X",
+      name: "Downtown Express",
+      type: "Express",
+      color: "primary",
+      stop: "Union Square Station",
+      status: "ontime",
+      arrival: "Due Now",
+      arrivalMinutes: 0,
+      delay: 0,
+    },
+    {
+      id: "42",
+      number: "42",
+      name: "Crosstown Local",
+      type: "Local",
+      color: "outline",
+      stop: "5th Ave & 34th St",
+      status: "delayed",
+      arrival: "12 min",
+      arrivalMinutes: 12,
+      delay: 4,
+    },
+    {
+      id: "r1",
+      number: "R1",
+      name: "Airport Rapid",
+      type: "Rapid",
+      color: "secondary",
+      stop: "Central Terminal",
+      status: "ontime",
+      arrival: "18 min",
+      arrivalMinutes: 18,
+      delay: 0,
+    },
+    {
+      id: "8a",
+      number: "8A",
+      name: "Westside Local",
+      type: "Local",
+      color: "outline",
+      stop: "Broadway & 72nd",
+      status: "cancelled",
+      arrival: "22 min",
+      arrivalMinutes: 22,
+      delay: 0,
+    },
+    {
+      id: "118",
+      number: "118",
+      name: "Oak Harbor",
+      type: "Rapid",
+      color: "secondary",
+      stop: "Central Station",
+      status: "ontime",
+      arrival: "8 min",
+      arrivalMinutes: 8,
+      delay: 0,
+    },
+    {
+      id: "402",
+      number: "402",
+      name: "Downtown North",
+      type: "Express",
+      color: "primary",
+      stop: "Heavy Traffic",
+      status: "delayed",
+      arrival: "15 min",
+      arrivalMinutes: 15,
+      delay: 5,
+    },
+  ],
+
+  schedules: [
+    { stop: "Central Station Transit Hub", route: "Express", time: "08:15 AM", status: "ontime", routeId: "14x" },
+    { stop: "North 4th & Elm St", route: "Local", time: "08:22 AM", status: "delayed", routeId: "42" },
+    { stop: "Central Park West", route: "Rapid", time: "08:30 AM", status: "ontime", routeId: "r1" },
+    { stop: "University Medical Center", route: "Express", time: "08:45 AM", status: "cancelled", routeId: "8a" },
+    { stop: "South End Terminal", route: "Local", time: "09:05 AM", status: "ontime", routeId: "42" },
+    { stop: "Oak Harbor Terminal", route: "Rapid", time: "09:15 AM", status: "ontime", routeId: "118" },
+    { stop: "Downtown North Station", route: "Express", time: "09:30 AM", status: "delayed", routeId: "402" },
+  ],
+
+  alerts: [
+    "12th Avenue construction is causing delays on Line 104 and 402. Expect 10-15 min variance.",
+  ],
+
+  station: "Central Station",
+  platform: "Platform 4",
+};
