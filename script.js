@@ -26,6 +26,14 @@ function applyFilters() {
   if (routeFilter.from && routeFilter.to && routeFilter.from !== routeFilter.to) {
     all = all.filter(r => r.from === routeFilter.from && r.to === routeFilter.to);
   }
+
+  const info = document.getElementById("stationInfo");
+  if (info) {
+    info.textContent = (routeFilter.from && routeFilter.to && routeFilter.from !== routeFilter.to)
+      ? routeFilter.from + " → " + routeFilter.to
+      : BUS_DATA.station + " \u2022 " + BUS_DATA.platform;
+  }
+
   renderArrivals(all);
   filterArrivals();
 }
@@ -237,6 +245,7 @@ function planRoute() {
 
   routeFilter.from = from;
   routeFilter.to = to;
+
 
   document.querySelector("#routeMenu .dropdown-item.selected")?.classList.remove("selected");
   document.querySelector("#routeMenu .dropdown-item[data-value='all']")?.classList.add("selected");
