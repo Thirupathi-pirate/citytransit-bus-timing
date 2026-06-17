@@ -14,8 +14,14 @@ function parseTime(s) {
   return h * 60 + m;
 }
 
-function minutesFromNow(timeStr) {
+function getISTNow() {
   const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  return new Date(utc + 5.5 * 3600000);
+}
+
+function minutesFromNow(timeStr) {
+  const now = getISTNow();
   const nowMin = now.getHours() * 60 + now.getMinutes();
   let diff = parseTime(timeStr) - nowMin;
   if (diff < 0) diff += 1440;
@@ -27,13 +33,11 @@ function formatTime(s) {
   return p[0] + ":" + p[1] + " " + p[2].toUpperCase();
 }
 
-// --- Raw timetable data (4 sections, stored flat as [time, op, via, ...]) ---
-
 const SECTIONS = [
   {
     id: "kottayam", color: "primary",
     name: "Ayarkunnam → Kottayam", via: "Via Eranthal / Manarkad",
-    dest: "Kottayam",
+    from: "Ayarkunnam", to: "Kottayam",
     services: [
       "6.28 am","SNT","Eranthal","7.10 am","TMS","Manarkad","7.25 am","Thumpi","Eranthal",
       "7.45 am","Pulladan","Manarkad","7.55 am","ATS","Eranthal","8.10 am","ATS","Eranthal",
@@ -53,7 +57,7 @@ const SECTIONS = [
   {
     id: "inbound", color: "secondary",
     name: "Towards Ayarkunnam", via: "From Kottayam / Various",
-    dest: "Ayarkunnam",
+    from: "Kottayam", to: "Ayarkunnam",
     services: [
       "7.05 am","Thumpi","","7.25 am","Pulladan","","7.35 am","Sangam","Kuroppas – Pambady",
       "8.05 am","SNT","","8.15 am","Pulladan","","8.17 am","Kattuveettil","Manarkad – Puthupally",
@@ -79,7 +83,7 @@ const SECTIONS = [
   {
     id: "ettumanoor", color: "secondary",
     name: "Ayarkunnam → Ettumanoor", via: "Via Peruvar / Thirikodd",
-    dest: "Ettumanoor",
+    from: "Ayarkunnam", to: "Ettumanoor",
     services: [
       "6.14 am","Thandra","Peruvar","6.30 am","Sangam","Peruvar","7.00 am","Thandra","Peruvar",
       "7.05 am","Kattuveettil","Thirikodd","7.50 am","Immanuvel","Thirikodd",
@@ -96,7 +100,7 @@ const SECTIONS = [
   {
     id: "puthupally", color: "outline",
     name: "Ayarkunnam → Puthupally", via: "Via Manarkad – Palli side road",
-    dest: "Puthupally",
+    from: "Ayarkunnam", to: "Puthupally",
     services: [
       "7.05 am","Thandra","Channaserry","8.17 am","Kattuveettil","Puthupally",
       "8.35 am","Malikakavu","","10.45 am","Kattuveettil","Puthupally",
@@ -108,7 +112,6 @@ const SECTIONS = [
   },
 ];
 
-// --- Flatten a section into service objects ---
 function expandSection(s) {
   const r = [];
   for (let i = 0; i < s.services.length; i += 3) {
@@ -117,7 +120,6 @@ function expandSection(s) {
   return r;
 }
 
-// --- Get all individual services as flat array with computed fields ---
 function getAllServices() {
   const all = [];
   SECTIONS.forEach(sec => {
@@ -128,8 +130,8 @@ function getAllServices() {
         t: sv.t,
         op: sv.op,
         via: sv.via,
-        dest: sec.dest,
-        section: sec.id,
+        from: sec.from,
+        to: sec.to,
         sectionName: sec.name,
         color: sec.color,
         mins: minutesFromNow(sv.t),
@@ -140,46 +142,40 @@ function getAllServices() {
   return all;
 }
 
-// --- Upcoming arrivals: individual buses sorted by nearest first ---
-function getUpcomingBuses(count) {
+function getAllUpcomingBuses() {
   return getAllServices()
     .filter(s => s.mins >= 0)
     .sort((a, b) => a.mins - b.mins)
-    .slice(0, count)
     .map(s => ({
       id: s.id,
-      number: "",
-      name: s.dest,
-      type: "Express",
+      name: s.op,
+      from: s.from,
+      to: s.to,
+      via: s.via,
+      routeName: s.sectionName,
+      section: s.id.split("-")[0],
       color: s.color,
-      stop: s.op + (s.via ? " \u00B7 Via " + s.via : ""),
       status: s.mins <= 2 ? "due" : "ontime",
       arrival: s.mins <= 2 ? "Due Now" : s.timeDisplay,
       arrivalMinutes: s.mins,
-      delay: 0,
     }));
 }
 
-// --- Full schedule: all services sorted by time of day ---
 function getFullSchedule() {
   return getAllServices()
-    .sort((a, b) => {
-      const ma = parseTime(a.t);
-      const mb = parseTime(b.t);
-      return ma - mb;
-    })
+    .sort((a, b) => parseTime(a.t) - parseTime(b.t))
     .map(s => ({
       route: s.sectionName,
       operator: s.op,
       time: s.timeDisplay,
       via: s.via,
       status: "ontime",
-      routeId: s.section,
+      routeId: s.sectionName,
     }));
 }
 
 const BUS_DATA = {
-  get routes() { return getUpcomingBuses(8); },
+  get routes() { return getAllUpcomingBuses(); },
   get schedules() { return getFullSchedule(); },
   alerts: [
     "Ayarkunnam Bus Stand operates daily from 6:00 AM to 8:00 PM. 125 total services across 4 routes.",

@@ -2,11 +2,14 @@
 // Aruvi — App Logic
 // ============================================================
 
+let timeWindow = 180;
+
 document.addEventListener("DOMContentLoaded", () => {
-  renderArrivals(BUS_DATA.routes);
-  renderSchedules(BUS_DATA.schedules);
-  renderAlerts(BUS_DATA.alerts);
   renderHeader(BUS_DATA.station, BUS_DATA.platform);
+  renderAlerts(BUS_DATA.alerts);
+  applyFilters();
+  renderSchedules(BUS_DATA.schedules);
+  renderTimeWindowUI();
 });
 
 // --- Render helpers ---
@@ -16,42 +19,44 @@ function renderHeader(station, platform) {
   if (el) el.textContent = station + " \u2022 " + platform;
 }
 
+function applyFilters() {
+  const all = BUS_DATA.routes;
+  const filtered = all.filter(r => r.arrivalMinutes <= timeWindow);
+  renderArrivals(filtered);
+}
+
 function renderArrivals(routes) {
   const grid = document.getElementById("arrivalsGrid");
   if (!grid) return;
   grid.innerHTML = routes.map((r, i) => {
-    const statusLabel = statusText(r.status);
-    const statusDot = statusDotClass(r.status);
+    const statusLabel = r.status === "due" ? "Due Now" : "On-time";
+    const statusDot = r.status === "due" ? "bg-primary" : "bg-tertiary";
+    const statusCls = r.status === "due" ? "text-primary" : "text-tertiary";
     const isDue = r.arrival === "Due Now";
     const timeClass = isDue ? "bus-pulse" : "";
-    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.id}" data-status="${r.status}">
+    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.section}" data-status="${r.status}">
       <div class="h-1.5 bg-${r.color}"></div>
       <div class="p-5">
-        <div class="flex items-start justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-${r.color}/20 flex items-center justify-center border border-${r.color}/30">
-              <span class="text-lg font-bold text-${r.color}">${r.number}</span>
-            </div>
-            <div>
-              <h3 class="font-semibold text-on-surface">${r.name}</h3>
-              <p class="text-xs text-on-surface-variant">${r.stop}</p>
-            </div>
-          </div>
-          <svg class="w-5 h-5 text-on-surface-variant group-hover:text-${r.color} transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="14" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="3" x2="7" y2="10"/><line x1="12" y1="3" x2="12" y2="10"/><line x1="17" y1="3" x2="17" y2="10"/><circle cx="7" cy="20" r="1.5" fill="currentColor" stroke="none"/><circle cx="17" cy="20" r="1.5" fill="currentColor" stroke="none"/></svg>
-        </div>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2 text-xs">
-            <span class="w-2 h-2 rounded-full ${statusDot}"></span>
-            <span class="${statusTextClass(r.status)} font-medium">${statusLabel}</span>
-          </div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-semibold text-on-surface text-base md:text-lg">${r.name}</h3>
           <div class="${isDue ? 'bg-primary/15 text-primary' : 'bg-surface-container-highest text-on-surface'} font-bold text-sm px-4 py-2 rounded-xl flex items-center gap-2 ${timeClass}">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             ${r.arrival}
           </div>
         </div>
+        <p class="text-sm md:text-base text-on-surface-variant font-medium mb-1">${r.from} → ${r.to}</p>
+        ${r.via ? `<p class="text-xs text-on-surface-variant mb-3">Via ${r.via}</p>` : `<p class="mb-3"></p>`}
+        <div class="flex items-center gap-2 text-xs">
+          <span class="w-2 h-2 rounded-full ${statusDot}"></span>
+          <span class="${statusCls} font-medium">${statusLabel}</span>
+        </div>
       </div>
     </div>`;
   }).join("");
+  const empty = document.getElementById("arrivalsEmpty");
+  if (empty) {
+    empty.classList.toggle("hidden", routes.length > 0);
+  }
 }
 
 function renderSchedules(schedules) {
@@ -59,15 +64,14 @@ function renderSchedules(schedules) {
   if (!tbody) return;
   tbody.innerHTML = schedules.map(s => {
     const isCancelled = s.status === "cancelled";
-    const isDelayed = s.status === "delayed";
-    return `<tr class="schedule-row bg-surface-container hover:bg-surface-container-high transition-colors${isCancelled ? ' opacity-60' : ''}" data-route="${s.routeId}">
+    return `<tr class="schedule-row bg-surface-container hover:bg-surface-container-high transition-colors${isCancelled ? ' opacity-60' : ''}" data-route="${s.route}">
       <td class="px-5 py-4 text-sm">${s.route}</td>
       <td class="px-5 py-4"><span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-container-high text-on-surface text-xs font-semibold border border-outline-variant">${s.operator}</span></td>
       <td class="px-5 py-4 font-mono text-sm font-bold${isCancelled ? ' text-outline line-through' : ''}">${s.time}</td>
       <td class="px-5 py-4"><span class="flex items-center gap-2 text-xs"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="text-tertiary">On-time</span></span></td>
     </tr>`;
   }).join("");
-  document.getElementById("scheduleCount").textContent = `Showing 1-${schedules.length} of ${schedules.length} services`;
+  document.getElementById("scheduleCount").textContent = "Showing 1-" + schedules.length + " of " + schedules.length + " services";
 }
 
 function renderAlerts(alerts) {
@@ -81,21 +85,28 @@ function renderAlerts(alerts) {
     </div>`).join("");
 }
 
-// --- Helpers ---
+// --- Time window preference ---
 
-function statusText(status) {
-  const m = { ontime: "On-time", delayed: "Delayed", cancelled: "Cancelled", due: "Due Now" };
-  return m[status] || status;
+function renderTimeWindowUI() {
+  const container = document.getElementById("timeWindowPref");
+  if (!container) return;
+  const opts = [
+    { label: "1h", value: 60 },
+    { label: "2h", value: 120 },
+    { label: "3h", value: 180 },
+    { label: "4h", value: 240 },
+    { label: "All", value: Infinity },
+  ];
+  container.innerHTML = opts.map(o =>
+    `<button class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${timeWindow === o.value ? 'bg-primary/15 text-primary border-primary/40' : 'bg-surface-container-high text-on-surface-variant border-outline-variant hover:bg-surface-container-highest hover-glow'}" onclick="setTimeWindow(${o.value})">${o.label}</button>`
+  ).join("");
 }
 
-function statusDotClass(status) {
-  const m = { ontime: "bg-tertiary", delayed: "bg-error", cancelled: "bg-error", due: "bg-primary" };
-  return m[status] || "bg-outline";
-}
-
-function statusTextClass(status) {
-  const m = { ontime: "text-tertiary", delayed: "text-error", cancelled: "text-error", due: "text-primary" };
-  return m[status] || "text-on-surface-variant";
+function setTimeWindow(mins) {
+  if (timeWindow === mins) return;
+  timeWindow = mins;
+  renderTimeWindowUI();
+  applyFilters();
 }
 
 // --- Dropdown ---

@@ -168,7 +168,13 @@ Live
 </div>
 </div>
 
-<div class="flex flex-wrap gap-3 mb-6 animate-fade-up stagger-2">
+<div class="flex flex-wrap items-center gap-3 mb-6 animate-fade-up stagger-2">
+<div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium mr-2">
+  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  Show:
+</div>
+<div class="flex gap-1" id="timeWindowPref"></div>
+<div class="w-px h-6 bg-outline-variant mx-1"></div>
 <div class="relative" id="routeDropdown">
 <button class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-high hover:bg-surface-container-highest rounded-xl border border-outline-variant text-sm font-medium text-on-surface transition-all hover-glow" onclick="toggleDropdown('route')">
 <svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -177,12 +183,10 @@ All Routes
 </button>
 <div class="dropdown-menu w-56" id="routeMenu">
 <div class="dropdown-item selected" data-value="all" onclick="selectDropdown('route', this, 'All Routes')"><span class="w-3 h-3 rounded-full bg-primary"></span>All Routes</div>
-<div class="dropdown-item" data-value="14x" onclick="selectDropdown('route', this, '14X Express')"><span class="w-3 h-3 rounded-full bg-primary"></span>14X Express</div>
-<div class="dropdown-item" data-value="42" onclick="selectDropdown('route', this, '42 Crosstown')"><span class="w-3 h-3 rounded-full bg-secondary"></span>42 Crosstown</div>
-<div class="dropdown-item" data-value="r1" onclick="selectDropdown('route', this, 'R1 Airport Rapid')"><span class="w-3 h-3 rounded-full bg-tertiary"></span>R1 Airport Rapid</div>
-<div class="dropdown-item" data-value="8a" onclick="selectDropdown('route', this, '8A Westside')"><span class="w-3 h-3 rounded-full bg-outline"></span>8A Westside</div>
-<div class="dropdown-item" data-value="118" onclick="selectDropdown('route', this, '118 Oak Harbor')"><span class="w-3 h-3 rounded-full bg-secondary"></span>118 Oak Harbor</div>
-<div class="dropdown-item" data-value="402" onclick="selectDropdown('route', this, '402 Downtown North')"><span class="w-3 h-3 rounded-full bg-primary"></span>402 Downtown North</div>
+<div class="dropdown-item" data-value="kottayam" onclick="selectDropdown('route', this, 'Ayarkunnam → Kottayam')"><span class="w-3 h-3 rounded-full bg-primary"></span>Ayarkunnam → Kottayam</div>
+<div class="dropdown-item" data-value="inbound" onclick="selectDropdown('route', this, 'Towards Ayarkunnam')"><span class="w-3 h-3 rounded-full bg-secondary"></span>Towards Ayarkunnam</div>
+<div class="dropdown-item" data-value="ettumanoor" onclick="selectDropdown('route', this, 'Ayarkunnam → Ettumanoor')"><span class="w-3 h-3 rounded-full bg-secondary"></span>Ayarkunnam → Ettumanoor</div>
+<div class="dropdown-item" data-value="puthupally" onclick="selectDropdown('route', this, 'Ayarkunnam → Puthupally')"><span class="w-3 h-3 rounded-full bg-outline"></span>Ayarkunnam → Puthupally</div>
 </div>
 </div>
 <div class="relative" id="statusDropdown">
@@ -216,6 +220,11 @@ All Day
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="arrivalsGrid"></div>
+<div id="arrivalsEmpty" class="hidden text-center py-16 animate-fade-in">
+  <svg class="w-16 h-16 text-outline mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  <p class="text-on-surface-variant text-lg font-medium">No upcoming buses</p>
+  <p class="text-outline text-sm mt-1">Try increasing the time window above</p>
+</div>
 </div>
 </section>
 
