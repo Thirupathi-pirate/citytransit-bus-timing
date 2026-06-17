@@ -28,3 +28,58 @@ body { background: #15121b; color: #e7e0ed; font-family: 'Inter', sans-serif; ov
 .swap-btn:hover { background: #37333d; transform: scale(1.1); }
 .swap-icon { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .swap-btn.swapped .swap-icon { transform: rotate(180deg); }
+
+/* --- Entry Animations --- */
+.animate-fade-up { opacity: 0; transform: translateY(30px); animation: fadeUp 0.6s ease forwards; }
+.animate-fade-in { opacity: 0; animation: fadeIn 0.6s ease forwards; }
+.animate-scale-in { opacity: 0; transform: scale(0.95); animation: scaleIn 0.5s ease forwards; }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes scaleIn { to { opacity: 1; transform: scale(1); } }
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* --- Hover Effects --- */
+.hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+
+.hover-glow { transition: all 0.3s ease; }
+.hover-glow:hover { box-shadow: 0 0 20px rgba(208, 188, 255, 0.2); border-color: rgba(208, 188, 255, 0.3); }
+
+.hover-bright { transition: all 0.3s ease; }
+.hover-bright:hover { filter: brightness(1.2); }
+
+.nav-link { position: relative; transition: color 0.3s ease; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: #d0bcff; transition: all 0.3s ease; transform: translateX(-50%); }
+.nav-link:hover::after { width: 80%; }
+
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.6s ease; }
+.btn-primary:hover::before { left: 100%; }
+
+.arrival-card { transition: all 0.3s ease; }
+.arrival-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); border-color: rgba(208, 188, 255, 0.2); }
+
+.dropdown-item { transition: all 0.2s ease; }
+.dropdown-item:hover { background: #37333d; transform: translateX(4px); }
+
+.glow-primary { transition: box-shadow 0.4s ease; }
+.glow-primary:hover { box-shadow: 0 0 40px rgba(208, 188, 255, 0.25); }
+
+.hero-glow { animation: glowFloat 6s ease-in-out infinite; }
+@keyframes glowFloat { 0%, 100% { opacity: 0.5; transform: translate(0, 0); } 50% { opacity: 0.8; transform: translate(-20px, -20px); } }
+
+.hero-glow-2 { animation: glowFloat2 8s ease-in-out infinite; }
+@keyframes glowFloat2 { 0%, 100% { opacity: 0.5; transform: translate(0, 0); } 50% { opacity: 0.7; transform: translate(20px, 20px); } }
+
+/* --- Shimmer on heading --- */
+.shimmer { background: linear-gradient(135deg, #d0bcff 0%, #adc6ff 30%, #d0bcff 60%, #adc6ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 200%; animation: shimmerMove 4s ease-in-out infinite; }
+@keyframes shimmerMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+/* --- Input focus glow --- */
+input:focus { box-shadow: 0 0 0 2px rgba(208, 188, 255, 0.2); }

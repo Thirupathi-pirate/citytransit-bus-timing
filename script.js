@@ -19,12 +19,12 @@ function renderHeader(station, platform) {
 function renderArrivals(routes) {
   const grid = document.getElementById("arrivalsGrid");
   if (!grid) return;
-  grid.innerHTML = routes.map(r => {
+  grid.innerHTML = routes.map((r, i) => {
     const statusLabel = statusText(r.status);
     const statusDot = statusDotClass(r.status);
     const isDue = r.arrival === "Due Now";
     const timeClass = isDue ? "bus-pulse" : "";
-    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group" data-route="${r.id}" data-status="${r.status}">
+    return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.id}" data-status="${r.status}">
       <div class="h-1.5 bg-${r.color}"></div>
       <div class="p-5">
         <div class="flex items-start justify-between mb-3">
