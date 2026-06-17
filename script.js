@@ -104,8 +104,14 @@ function toggleDropdown(id) {
   const menu = document.getElementById(id + "Menu");
   if (!menu) return;
   const isOpen = menu.classList.contains("open");
-  document.querySelectorAll(".dropdown-menu.open").forEach(m => { if (m.id !== id + "Menu") m.classList.remove("open"); });
+  document.querySelectorAll(".dropdown-menu.open").forEach(m => {
+    if (m.id !== id + "Menu") m.classList.remove("open");
+    const btn = m.parentElement?.querySelector("button");
+    if (btn) btn.classList.remove("dropdown-open");
+  });
   menu.classList.toggle("open", !isOpen);
+  const btn = menu.parentElement?.querySelector("button");
+  if (btn) btn.classList.toggle("dropdown-open", !isOpen);
 }
 
 function selectDropdown(id, el, label) {
@@ -118,9 +124,41 @@ function selectDropdown(id, el, label) {
   if (id === "scheduleRoute") filterScheduleRoute();
 }
 
+// --- From / To custom dropdowns ---
+
+function selectFrom(value) {
+  const label = document.getElementById("fromStopLabel");
+  if (!label) return;
+  label.textContent = value;
+  document.querySelectorAll("#fromStopMenu .dropdown-item").forEach(i => {
+    i.classList.toggle("selected", i.dataset.value === value);
+  });
+  const menu = document.getElementById("fromStopMenu");
+  menu.classList.remove("open");
+  const btn = menu.parentElement?.querySelector("button");
+  if (btn) btn.classList.remove("dropdown-open");
+}
+
+function selectTo(value) {
+  const label = document.getElementById("toStopLabel");
+  if (!label) return;
+  label.textContent = value;
+  document.querySelectorAll("#toStopMenu .dropdown-item").forEach(i => {
+    i.classList.toggle("selected", i.dataset.value === value);
+  });
+  const menu = document.getElementById("toStopMenu");
+  menu.classList.remove("open");
+  const btn = menu.parentElement?.querySelector("button");
+  if (btn) btn.classList.remove("dropdown-open");
+}
+
 document.addEventListener("click", function(e) {
   document.querySelectorAll(".dropdown-menu.open").forEach(menu => {
-    if (!menu.parentElement.contains(e.target)) menu.classList.remove("open");
+    if (!menu.parentElement.contains(e.target)) {
+      menu.classList.remove("open");
+      const btn = menu.parentElement?.querySelector("button");
+      if (btn) btn.classList.remove("dropdown-open");
+    }
   });
 });
 
@@ -184,13 +222,13 @@ document.addEventListener("scroll", () => {
 // --- Swap locations ---
 
 function swapLocations() {
-  const from = document.getElementById("fromInput");
-  const to = document.getElementById("toInput");
+  const fromLabel = document.getElementById("fromStopLabel");
+  const toLabel = document.getElementById("toStopLabel");
   const btn = document.querySelector(".swap-btn");
-  if (!from || !to) return;
-  const tmp = from.value;
-  from.value = to.value;
-  to.value = tmp;
+  if (!fromLabel || !toLabel) return;
+  const tmp = fromLabel.textContent;
+  selectFrom(toLabel.textContent);
+  selectTo(tmp);
   btn.classList.add("swapped");
   setTimeout(() => btn.classList.remove("swapped"), 400);
 }

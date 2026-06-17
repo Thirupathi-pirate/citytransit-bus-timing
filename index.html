@@ -101,17 +101,21 @@ Aruvi
 <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto] gap-4 md:gap-6 items-end">
 <div class="space-y-2">
 <label class="text-xs font-semibold text-primary uppercase tracking-widest">From</label>
-<div class="flex items-center gap-3 bg-surface-container-highest rounded-xl px-5 py-2 border border-transparent focus-within:border-primary transition-all">
+<div class="relative" id="fromStopDropdown">
+<button class="flex items-center gap-3 w-full bg-surface-container-highest hover:bg-surface-container-high rounded-xl px-5 py-4 border border-transparent transition-all text-sm md:text-base text-on-surface cursor-pointer" onclick="toggleDropdown('fromStop')">
 <svg class="w-5 h-5 text-secondary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-<select class="bg-transparent border-none focus:ring-0 w-full text-sm md:text-base text-on-surface outline-none appearance-none cursor-pointer" id="fromInput">
-<option value="Ayarkunnam" class="bg-surface text-on-surface">Ayarkunnam</option>
-<option value="Kottayam" class="bg-surface text-on-surface">Kottayam</option>
-<option value="Ettumanoor" class="bg-surface text-on-surface">Ettumanoor</option>
-<option value="Puthupally" class="bg-surface text-on-surface">Puthupally</option>
-<option value="Channaserry" class="bg-surface text-on-surface">Channaserry</option>
-<option value="Malikakavu" class="bg-surface text-on-surface">Malikakavu</option>
-<option value="Thandra" class="bg-surface text-on-surface">Thandra</option>
-</select>
+<span class="flex-1 text-left" id="fromStopLabel">Ayarkunnam</span>
+<svg class="w-4 h-4 text-outline flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+</button>
+<div class="dropdown-menu" id="fromStopMenu" style="min-width:180px">
+<div class="dropdown-item selected" data-value="Ayarkunnam" onclick="selectFrom('Ayarkunnam')">Ayarkunnam</div>
+<div class="dropdown-item" data-value="Kottayam" onclick="selectFrom('Kottayam')">Kottayam</div>
+<div class="dropdown-item" data-value="Ettumanoor" onclick="selectFrom('Ettumanoor')">Ettumanoor</div>
+<div class="dropdown-item" data-value="Puthupally" onclick="selectFrom('Puthupally')">Puthupally</div>
+<div class="dropdown-item" data-value="Channaserry" onclick="selectFrom('Channaserry')">Channaserry</div>
+<div class="dropdown-item" data-value="Malikakavu" onclick="selectFrom('Malikakavu')">Malikakavu</div>
+<div class="dropdown-item" data-value="Thandra" onclick="selectFrom('Thandra')">Thandra</div>
+</div>
 </div>
 </div>
 <button class="flex items-center justify-center p-3 rounded-full bg-surface-container-highest hover:bg-surface-container-higher transition-colors self-end mb-1 swap-btn" onclick="swapLocations()" type="button">
@@ -119,17 +123,21 @@ Aruvi
 </button>
 <div class="space-y-2">
 <label class="text-xs font-semibold text-primary uppercase tracking-widest">To</label>
-<div class="flex items-center gap-3 bg-surface-container-highest rounded-xl px-5 py-2 border border-transparent focus-within:border-primary transition-all">
+<div class="relative" id="toStopDropdown">
+<button class="flex items-center gap-3 w-full bg-surface-container-highest hover:bg-surface-container-high rounded-xl px-5 py-4 border border-transparent transition-all text-sm md:text-base text-on-surface cursor-pointer" onclick="toggleDropdown('toStop')">
 <svg class="w-5 h-5 text-secondary flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-<select class="bg-transparent border-none focus:ring-0 w-full text-sm md:text-base text-on-surface outline-none appearance-none cursor-pointer" id="toInput">
-<option value="Kottayam" class="bg-surface text-on-surface">Kottayam</option>
-<option value="Ayarkunnam" class="bg-surface text-on-surface">Ayarkunnam</option>
-<option value="Ettumanoor" class="bg-surface text-on-surface">Ettumanoor</option>
-<option value="Puthupally" class="bg-surface text-on-surface">Puthupally</option>
-<option value="Channaserry" class="bg-surface text-on-surface">Channaserry</option>
-<option value="Malikakavu" class="bg-surface text-on-surface">Malikakavu</option>
-<option value="Thandra" class="bg-surface text-on-surface">Thandra</option>
-</select>
+<span class="flex-1 text-left" id="toStopLabel">Kottayam</span>
+<svg class="w-4 h-4 text-outline flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+</button>
+<div class="dropdown-menu" id="toStopMenu" style="min-width:180px">
+<div class="dropdown-item selected" data-value="Kottayam" onclick="selectTo('Kottayam')">Kottayam</div>
+<div class="dropdown-item" data-value="Ayarkunnam" onclick="selectTo('Ayarkunnam')">Ayarkunnam</div>
+<div class="dropdown-item" data-value="Ettumanoor" onclick="selectTo('Ettumanoor')">Ettumanoor</div>
+<div class="dropdown-item" data-value="Puthupally" onclick="selectTo('Puthupally')">Puthupally</div>
+<div class="dropdown-item" data-value="Channaserry" onclick="selectTo('Channaserry')">Channaserry</div>
+<div class="dropdown-item" data-value="Malikakavu" onclick="selectTo('Malikakavu')">Malikakavu</div>
+<div class="dropdown-item" data-value="Thandra" onclick="selectTo('Thandra')">Thandra</div>
+</div>
 </div>
 </div>
 <button class="btn-primary px-10 py-4 rounded-xl text-sm md:text-base font-bold text-white flex items-center justify-center gap-2 whitespace-nowrap">

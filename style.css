@@ -69,6 +69,7 @@ body { background: #15121b; color: #e7e0ed; font-family: 'Inter', sans-serif; ov
 
 .dropdown-item { transition: all 0.2s ease; }
 .dropdown-item:hover { background: #37333d; transform: translateX(4px); }
+button.dropdown-open { border-color: rgba(208, 188, 255, 0.3); background: #2c2832; }
 
 .glow-primary { transition: box-shadow 0.4s ease; }
 .glow-primary:hover { box-shadow: 0 0 40px rgba(208, 188, 255, 0.25); }
