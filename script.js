@@ -29,9 +29,6 @@ function renderArrivals(routes) {
   const grid = document.getElementById("arrivalsGrid");
   if (!grid) return;
   grid.innerHTML = routes.map((r, i) => {
-    const statusLabel = r.status === "due" ? "Due Now" : "On-time";
-    const statusDot = r.status === "due" ? "bg-primary" : "bg-tertiary";
-    const statusCls = r.status === "due" ? "text-primary" : "text-tertiary";
     const isDue = r.arrival === "Due Now";
     const timeClass = isDue ? "bus-pulse" : "";
     return `<div class="arrival-card bg-surface-container rounded-2xl border border-outline-variant overflow-hidden hover:border-${r.color}/50 transition-all cursor-pointer group animate-fade-up" style="animation-delay:${0.05 * i}s" data-route="${r.section}" data-status="${r.status}">
@@ -45,11 +42,7 @@ function renderArrivals(routes) {
           </div>
         </div>
         <p class="text-sm md:text-base text-on-surface-variant font-medium mb-1">${r.from} → ${r.to}</p>
-        ${r.via ? `<p class="text-xs text-on-surface-variant mb-3">Via ${r.via}</p>` : `<p class="mb-3"></p>`}
-        <div class="flex items-center gap-2 text-xs">
-          <span class="w-2 h-2 rounded-full ${statusDot}"></span>
-          <span class="${statusCls} font-medium">${statusLabel}</span>
-        </div>
+        ${r.via ? `<p class="text-xs text-on-surface-variant">Via ${r.via}</p>` : ''}
       </div>
     </div>`;
   }).join("");
